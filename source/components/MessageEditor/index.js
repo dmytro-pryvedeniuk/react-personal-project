@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { string, func } from 'prop-types';
+import Styles from './styles.m.css';
 
 export default class MessageEditor extends PureComponent {
 
@@ -65,6 +66,7 @@ export default class MessageEditor extends PureComponent {
 
         return (
             <input
+                className={Styles.messageEditor}
                 ref={this.textInput}
                 type='text'
                 value={newMessage}
