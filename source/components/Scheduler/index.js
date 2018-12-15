@@ -16,7 +16,7 @@ export default class Scheduler extends Component {
         isTasksFetching: false,
 
         tasks: [
-            { 'id': '1', message: 'Task A', completed: 'true', favorite: false},
+            { 'id': '1', message: 'Task A', completed: 'true', favorite: false },
             { 'id': '2', message: 'Task B', completed: 'false', favorite: true },
             { 'id': '3', message: 'Task C', completed: 'false', favorite: false }
         ]
@@ -43,14 +43,14 @@ export default class Scheduler extends Component {
         if (!task)
             return;
         const taskToUse = {
-            ...task, 
+            ...task,
             favorite: !task.favorite
-        }; 
-        
+        };
+
         this.setState({
             tasks: taskToUse.favorite
-                ?[taskToUse, ...tasks.filter(task => task.id !== id)]
-                :[...tasks.filter(task => task.id !== id), taskToUse]
+                ? [taskToUse, ...tasks.filter(task => task.id !== id)]
+                : [...tasks.filter(task => task.id !== id), taskToUse]
         })
     }
 
@@ -88,10 +88,11 @@ export default class Scheduler extends Component {
             <Task
                 key={task.id}
                 {...task}
+                actionColor='#3b8ef3'
+                actionBackground='#FFF'
                 _deleteTask={this._deleteTask}
                 _toggleFavorite={this._toggleFavorite}
-            >
-            </Task>
+            />
         );
 
         return (
