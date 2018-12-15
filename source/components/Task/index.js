@@ -1,6 +1,6 @@
 // Core
 import React, { PureComponent } from 'react';
-import { func, string } from 'prop-types';
+import { func } from 'prop-types';
 
 // Instruments
 import Styles from './styles.m.css';
@@ -13,9 +13,7 @@ export default class Task extends PureComponent {
 
     static propTypes = {
         _deleteTask: func.isRequired,
-        _toggleFavorite: func.isRequired,
-        actionColor: string.isRequired,
-        actionBackground: string.isRequired
+        _toggleFavorite: func.isRequired
     }
 
     _getTaskShape = ({
@@ -40,26 +38,26 @@ export default class Task extends PureComponent {
         _toggleFavorite(id);
     }
 
+    componentDidMount() {
+        this.color1 = getComputedStyle(document.documentElement)
+            .getPropertyValue('--paletteColor3');
+    }
+
     render() {
-        const {
-            message, 
-            favorite, 
-            actionColor, 
-            actionBackground
-        } = this.props;
+        const {message, favorite} = this._getTaskShape({});
 
         return (<li className={Styles.task}>
             <div className={Styles.content}>
                 <Checkbox 
                     className={Styles.toggleTaskCompletedState} 
-                    color1={actionColor} 
-                    color2={actionBackground}>
+                    color1='#3B8EF3' 
+                    color2='#FFF'>
                 </Checkbox>
                 <span>{message}</span>
             </div>
             <div className={Styles.actions}>
                 <Star
-                    color1={actionColor} 
+                    color1='#3B8EF3' 
                     inlineBlock 
                     className={Styles.toggleTaskFavoriteState}
                     onClick = {this._toggleFavorite}
