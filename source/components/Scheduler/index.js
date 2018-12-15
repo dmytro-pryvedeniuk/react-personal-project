@@ -62,7 +62,7 @@ export default class Scheduler extends Component {
         })
     }
 
-    _updateCurrentText = (event) => {
+    _updateNewTaskMessage = (event) => {
         console.log(event.target.value);
         this.setState({
             newTaskMessage: event.target.value
@@ -81,6 +81,22 @@ export default class Scheduler extends Component {
         }
     }
 
+    _updateTaskMessage = (id, text) => {
+        console.log('Updating ' + text);
+        const { tasks } = this.state;
+        const task = tasks.find(task => task.id == id);
+        if (!task)
+            return;
+        const taskToUse = {
+            ...task, 
+            message: text
+        }; 
+        
+        this.setState({
+            tasks: tasks.map(task => task.id === id ? taskToUse: task)
+        })
+    }
+
     render() {
         const { tasks, newTaskMessage } = this.state;
 
@@ -90,6 +106,7 @@ export default class Scheduler extends Component {
                 {...task}
                 _deleteTask={this._deleteTask}
                 _toggleFavorite={this._toggleFavorite}
+                _updateTaskMessage={this._updateTaskMessage}
             >
             </Task>
         );
@@ -105,7 +122,7 @@ export default class Scheduler extends Component {
                         <form onSubmit={this._handleOnCommit}>
                             <input
                                 value={newTaskMessage}
-                                onChange={this._updateCurrentText}
+                                onChange={this._updateNewTaskMessage}
                                 onKeyPress={this._handleOnKeyPress}
                                 placeholder="Описание моей новой задачи"
                                 type="text" />

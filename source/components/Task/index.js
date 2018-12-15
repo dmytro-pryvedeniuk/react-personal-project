@@ -2,6 +2,8 @@
 import React, { PureComponent } from 'react';
 import { func } from 'prop-types';
 
+import MessageEditor from '../MessageEditor';
+
 // Instruments
 import Styles from './styles.m.css';
 import Checkbox from '../../theme/assets/Checkbox';
@@ -13,7 +15,12 @@ export default class Task extends PureComponent {
 
     static propTypes = {
         _deleteTask: func.isRequired,
-        _toggleFavorite: func.isRequired
+        _toggleFavorite: func.isRequired,
+        _updateTaskMessage: func.isRequired
+    }
+
+    state = {
+        isTaskEditingState: false,
     }
 
     _getTaskShape = ({
@@ -38,33 +45,61 @@ export default class Task extends PureComponent {
         _toggleFavorite(id);
     }
 
-    componentDidMount() {
-        this.color1 = getComputedStyle(document.documentElement)
-            .getPropertyValue('--paletteColor3');
+    _setTaskEditingState = () => {
+        const { isTaskEditingState } = this.state;
+
+        this.setState({
+            isTaskEditingState: !isTaskEditingState,
+        });
+    }
+
+    _applyNewTaskMessage = (text) => {
+        const { _updateTaskMessage, id } = this.props;
+        _updateTaskMessage(id, text);
     }
 
     render() {
-        const {message, favorite} = this._getTaskShape({});
+        const task = this._getTaskShape({});
+        const { isTaskEditingState } = this.state;
+        const actionColor = '#3B8EF3';
 
         return (<li className={Styles.task}>
             <div className={Styles.content}>
-                <Checkbox 
-                    className={Styles.toggleTaskCompletedState} 
-                    color1='#3B8EF3' 
+                <Checkbox
+                    className={Styles.toggleTaskCompletedState}
+                    color1={actionColor}
                     color2='#FFF'>
                 </Checkbox>
-                <span>{message}</span>
+
+                {isTaskEditingState
+                    ? <MessageEditor
+                        id={task.id}
+                        message={task.message}
+                        _applyNewTaskMessage={this._applyNewTaskMessage}
+                        _setTaskEditingState={this._setTaskEditingState}
+                    />
+                    : <span>{task.message}</span>
+                }
             </div>
             <div className={Styles.actions}>
                 <Star
-                    color1='#3B8EF3' 
-                    inlineBlock 
+                    color1={actionColor}
+                    inlineBlock
                     className={Styles.toggleTaskFavoriteState}
-                    onClick = {this._toggleFavorite}
-                    checked = {favorite}>
-                </Star>
-                <Edit inlineBlock className={Styles.updateTaskMessageOnClick}></Edit>
-                <Remove inlineBlock onClick={this._deleteTask}></Remove>
+                    onClick={this._toggleFavorite}
+                    checked={task.favorite}
+                />
+                <Edit
+                    color1={actionColor}
+                    inlineBlock
+                    className={Styles.updateTaskMessageOnClick}
+                    onClick={this._setTaskEditingState}
+                />
+                <Remove
+                    color1={actionColor}
+                    inlineBlock
+                    onClick={this._deleteTask}
+                />
             </div>
         </li>);
     }
