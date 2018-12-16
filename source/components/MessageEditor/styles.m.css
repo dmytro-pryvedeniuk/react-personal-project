@@ -1,8 +1,0 @@
-.messageEditor {
-    width: 100%;
-    border-color: transparent;
-
-    &:not([disabled]) {
-        border-color: var(--paletteColor3);
-    }
-}
