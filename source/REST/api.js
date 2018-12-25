@@ -1,33 +1,55 @@
-import { BaseTaskModel } from '../instruments'
+import { MAIN_URL, TOKEN } from "../REST/config";
 
 export const api = {
 
-    tasks: [
-        { id: '1', message: 'Task A', completed: true, favorite: false },
-        { id: '2', message: 'Task B', completed: false, favorite: true },
-        { id: '3', message: 'Task C', completed: false, favorite: false }
-    ],
-
-    createTask(message) {
-        const task = new BaseTaskModel();
-        task.message = message;
+    async createTask(message) {
+        const response = await fetch(MAIN_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: TOKEN,
+            },
+            body: JSON.stringify({ message }),
+        });
+        const { data: task } = await response.json();
         return task;
     },
 
     async completeAllTasks(notCompleteTasks) {
-        this.tasks = this.tasks.map(task => notCompleteTasks.some(notCompleteTask => notCompleteTask.id == task.id) ?
-            ({ ...task, completed: true }) : task);
+        const tasksToUpdate = notCompleteTasks.map(task => ({ ...task, completed: true }));
+        await Promise.all(tasksToUpdate.map(task => this.updateTask(task)));
     },
 
-    fetchTasks() {
-        return this.tasks;
+    async fetchTasks() {
+        const response = await fetch(MAIN_URL, {
+            method: 'GET',
+            headers: {
+                Authorization: TOKEN,
+            }
+        });
+        const { data: tasks } = await response.json();
+        return tasks;
     },
 
-    removeTask(id) {
-        this.tasks = this.tasks.filter(task => task.id !== id);
+    async removeTask(id) {
+        await fetch(`${MAIN_URL}/${id}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: TOKEN,
+            }
+        });
     },
 
-    updateTask(updatedTask) {
-        this.tasks = this.tasks.map(task => task.id === updatedTask.id ? updatedTask : task)
+    async updateTask(updatedTask) {
+        const response = await fetch(MAIN_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: TOKEN,
+            },
+            body: JSON.stringify([updatedTask]),
+        });
+        const { data: result } = await response.json();
+        return result[0];
     }
 }
