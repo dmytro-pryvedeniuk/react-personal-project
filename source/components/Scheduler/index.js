@@ -94,7 +94,7 @@ export default class Scheduler extends Component {
 
     _getAllCompleted = () => {
         const { tasks } = this.state;
-        return !tasks.some(task => !task.completed);
+        return tasks.every(task => task.completed);
     }
 
     _updateNewTaskMessage = (event) => {
