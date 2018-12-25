@@ -134,17 +134,15 @@ export default class Scheduler extends Component {
         return new Date(b.created).getTime() - new Date(a.created).getTime();
     }
 
-    render() {
-        const { tasks: notSortedTasks, newTaskMessage, tasksFilter, isTasksFetching } = this.state;
-        const allCompleted = this._getAllCompleted();
-
-        const tasks = notSortedTasks.sort(this._compareTasks);
-
+    _getTasks()
+    {
+        const { tasks: notSortedTasks, tasksFilter } = this.state;
         const filteredTasks = tasksFilter.length == 0
-            ? tasks
-            : tasks.filter(task => task.message && task.message.toLowerCase().includes(tasksFilter));
+            ? notSortedTasks
+            : notSortedTasks.filter(task => task.message && task.message.toLowerCase().includes(tasksFilter));
+        const tasks = filteredTasks.sort(this._compareTasks);
 
-        const tasksJSX = filteredTasks.map((task) =>
+        const tasksJSX = tasks.map((task) =>
             <Task
                 key={task.id}
                 {...task}
@@ -152,6 +150,13 @@ export default class Scheduler extends Component {
                 _updateTaskAsync={this._updateTaskAsync}
             />
         );
+        return tasksJSX;
+    }
+
+    render() {
+        const { newTaskMessage, tasksFilter, isTasksFetching } = this.state;
+        const tasksJSX = this._getTasks();
+        const allCompleted = this._getAllCompleted();
 
         return (
             <section className={Styles.scheduler}>
