@@ -1,6 +1,7 @@
 // Core
 import React, { PureComponent } from 'react';
 import { func, string, bool } from 'prop-types';
+import cx from 'classnames';
 
 // Instruments
 import Styles from './styles.m.css';
@@ -131,11 +132,21 @@ export default class Task extends PureComponent {
         }
     }
 
+    _getTaskStyle(task) {
+        return cx(Styles.task, {
+            [Styles.completed]: task.completed
+        })
+    }
+
     render() {
         const task = this._getTaskShape({});
         const { isTaskEditing, newMessage } = this.state;
+        const taskStyle = this._getTaskStyle(task);
 
-        return (<li className={Styles.task}>
+        const color1 = '#3B8EF3';
+        const color2 = '#000';
+
+        return (<li className={taskStyle}>
             <div className={Styles.content}>
                 <Checkbox
                     className={Styles.toggleTaskCompletedState}
@@ -158,8 +169,8 @@ export default class Task extends PureComponent {
             </div>
             <div className={Styles.actions}>
                 <Star
-                    color1='#3B8EF3'
-                    color2='#000'
+                    color1={color1}
+                    color2={color2}
                     inlineBlock={true}
                     className={Styles.toggleTaskFavoriteState}
                     onClick={this._toggleTaskFavoriteState}
@@ -167,15 +178,15 @@ export default class Task extends PureComponent {
                 />
                 <Edit
                     checked={false}
-                    color1='#3B8EF3'
-                    color2='#000'
+                    color1={color1}
+                    color2={color2}
                     inlineBlock={true}
                     className={Styles.updateTaskMessageOnClick}
                     onClick={this._updateTaskMessageOnClick}
                 />
                 <Remove
-                    color1='#3B8EF3'
-                    color2='#000'
+                    color1={color1}
+                    color2={color2}
                     inlineBlock={true}
                     className={Styles.removeTask}
                     onClick={this._removeTask}

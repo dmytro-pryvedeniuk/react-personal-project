@@ -1,6 +1,6 @@
 // Core
 import React, { Component } from 'react';
-
+import FlipMove from 'react-flip-move';
 import Spinner from '../Spinner';
 
 // Instruments
@@ -150,8 +150,7 @@ export default class Scheduler extends Component {
                 {...task}
                 _removeTaskAsync={this._removeTaskAsync}
                 _updateTaskAsync={this._updateTaskAsync}
-            >
-            </Task>
+            />
         );
 
         return (
@@ -177,9 +176,13 @@ export default class Scheduler extends Component {
                                 type="text" />
                             <button>Добавить задачу</button>
                         </form>
-                        <ul>
-                            {tasksJSX}
-                        </ul>
+                        <div className="overlay">
+                            <ul>
+                                <FlipMove duration={400}>
+                                    {tasksJSX}
+                                </FlipMove>
+                            </ul>
+                        </div>
                     </section>
                     <footer>
                         <Checkbox
